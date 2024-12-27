@@ -5,18 +5,16 @@ document.addEventListener("DOMContentLoaded", () => {
   // הגדרת גודל קנבס רספונסיבי
   function resizeCanvas() {
     const container = document.querySelector(".game-board");
-    const containerWidth = container.clientWidth;
-    const size = Math.min(containerWidth, window.innerHeight * 0.6);
-
+    // שינוי לוגיקת החישוב לתמיכה טובה יותר במובייל
+    const containerWidth = Math.min(container.clientWidth, window.innerWidth * 0.95);
+    const containerHeight = window.innerHeight * 0.6;
+    const size = Math.min(containerWidth, containerHeight);
+    
     canvas.width = size;
     canvas.height = size;
-
-    // עדכון גודל הרשת
+    
     gridSize = Math.floor(size / 20);
     tileCount = Math.floor(size / gridSize);
-
-    // יצירת מזון מחדש
-    createFood();
   }
 
   // מניעת גלילה בטלפון
@@ -42,6 +40,10 @@ document.addEventListener("DOMContentLoaded", () => {
   let gameLoop;
   let gameRunning = true;
   let isPaused = false;
+
+  // הוספה לתחילת הקובץ script.js
+  let lastFrameTime = 0;
+  const FRAME_RATE = 60;
 
   // עדכון שיא
   document.getElementById("highScore").textContent = highScore;
@@ -150,6 +152,34 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 
     document.addEventListener("keydown", togglePause);
+
+    // הוספת תמיכה בג'סטורות מגע
+    let touchStartX, touchStartY;
+    
+    canvas.addEventListener('touchstart', (e) => {
+      touchStartX = e.touches[0].clientX;
+      touchStartY = e.touches[0].clientY;
+    });
+    
+    canvas.addEventListener('touchmove', (e) => {
+      e.preventDefault();
+      if (!touchStartX || !touchStartY) return;
+      
+      const touchEndX = e.touches[0].clientX;
+      const touchEndY = e.touches[0].clientY;
+      
+      const deltaX = touchEndX - touchStartX;
+      const deltaY = touchEndY - touchStartY;
+      
+      if (Math.abs(deltaX) > Math.abs(deltaY)) {
+        changeDirection(deltaX > 0 ? 1 : -1, 0);
+      } else {
+        changeDirection(0, deltaY > 0 ? 1 : -1);
+      }
+      
+      touchStartX = touchEndX;
+      touchStartY = touchEndY;
+    });
   }
 
   // יצירת אוכל במיקום רנדומלי
@@ -245,13 +275,19 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   // עדכון המשחק
-  function gameUpdate() {
-    if (!gameRunning) return;
-
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-    moveSnake();
-    drawFood();
-    drawSnake();
+  function gameUpdate(timestamp) {
+    if (!gameRunning || isPaused) return;
+    
+    const elapsed = timestamp - lastFrameTime;
+    if (elapsed > 1000 / FRAME_RATE) {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      moveSnake();
+      drawFood();
+      drawSnake();
+      lastFrameTime = timestamp;
+    }
+    
+    requestAnimationFrame(gameUpdate);
   }
 
   // טיפול בסיום משחק

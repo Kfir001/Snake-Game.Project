@@ -193,8 +193,9 @@ body {
 
 @media (max-width: 768px) {
   .game-container {
-    width: 95%;
-    padding: 15px;
+    width: 100%;
+    padding: 10px;
+    margin: 0;
     transform: none;
   }
 
@@ -205,11 +206,26 @@ body {
 
   .mobile-controls {
     display: flex;
+    justify-content: center;
+    margin-top: 15px;
   }
 
   .score-board {
     font-size: 1.2rem;
     padding: 10px;
+  }
+
+  .game-board {
+    width: 100%;
+    height: auto;
+  }
+
+  .arrow-btn {
+    width: 60px;
+    height: 60px;
+    margin: 5px;
+    touch-action: manipulation;
+    min-height: 44px;
   }
 }
 
