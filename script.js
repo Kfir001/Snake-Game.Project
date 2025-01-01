@@ -1,20 +1,24 @@
 document.addEventListener("DOMContentLoaded", () => {
-  const canvas = document.getElementById("gameCanvas");
-  const ctx = canvas.getContext("2d");
+  const { canvas, ctx } = setupCanvas();
 
   // הגדרת גודל קנבס רספונסיבי
   function resizeCanvas() {
     const container = document.querySelector(".game-board");
-    // שינוי לוגיקת החישוב לתמיכה טובה יותר במובייל
-    const containerWidth = Math.min(container.clientWidth, window.innerWidth * 0.95);
-    const containerHeight = window.innerHeight * 0.6;
-    const size = Math.min(containerWidth, containerHeight);
+    
+    // Calculate optimal size for laptop screens
+    const maxSize = Math.min(window.innerWidth * 0.7, window.innerHeight * 0.8);
+    const size = Math.min(maxSize, 800); // Cap at 800px
     
     canvas.width = size;
     canvas.height = size;
     
-    gridSize = Math.floor(size / 20);
-    tileCount = Math.floor(size / gridSize);
+    // Adjust grid size for better visibility on laptop
+    tileCount = 20; // Keep grid cells big enough
+    gridSize = Math.floor(size / tileCount);
+    
+    // Clear canvas with black background
+    ctx.fillStyle = '#000';
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
   }
 
   // מניעת גלילה בטלפון
@@ -44,6 +48,12 @@ document.addEventListener("DOMContentLoaded", () => {
   // הוספה לתחילת הקובץ script.js
   let lastFrameTime = 0;
   const FRAME_RATE = 60;
+
+  // Add these variables at the top
+  let speed = 10; // Initial speed
+  const maxSpeed = 20;
+  const speedIncrement = 0.5;
+  let lastUpdate = 0;
 
   // עדכון שיא
   document.getElementById("highScore").textContent = highScore;
@@ -232,6 +242,10 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // עדכון מיקום הנחש
   function moveSnake() {
+    const now = Date.now();
+    if (now - lastUpdate < 1000 / speed) return;
+    lastUpdate = now;
+
     const head = { x: snake[0].x + dx, y: snake[0].y + dy };
 
     // בדיקת התנגשות בקירות
@@ -269,6 +283,9 @@ document.addEventListener("DOMContentLoaded", () => {
         clearInterval(gameLoop);
         gameLoop = setInterval(gameUpdate, gameSpeed);
       }
+      if (speed < maxSpeed) {
+        speed += speedIncrement;
+      }
     } else {
       snake.pop();
     }
@@ -280,7 +297,10 @@ document.addEventListener("DOMContentLoaded", () => {
     
     const elapsed = timestamp - lastFrameTime;
     if (elapsed > 1000 / FRAME_RATE) {
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      // נקה את הקנבס עם רקע שחור
+      ctx.fillStyle = '#000';
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+      
       moveSnake();
       drawFood();
       drawSnake();
@@ -339,6 +359,10 @@ document.addEventListener("DOMContentLoaded", () => {
   // התחלת המשחק
   createFood();
   gameLoop = setInterval(gameUpdate, gameSpeed);
+  
+  // קריאה לפונקציית הרסייז בטעינה ובכל שינוי גודל מסך
+  window.addEventListener('resize', resizeCanvas);
+  window.addEventListener('orientationchange', resizeCanvas);
 });
 
 // Add pause toggle function
@@ -361,4 +385,17 @@ function updateScore(newScore) {
   setTimeout(() => {
     scoreElement.style.transform = "scale(1)";
   }, 200);
+}
+
+// Add this function for canvas setup
+function setupCanvas() {
+    const canvas = document.getElementById('gameCanvas');
+    const ctx = canvas.getContext('2d');
+    
+    // Default size optimized for laptop screens
+    const defaultSize = 800;
+    canvas.width = defaultSize;
+    canvas.height = defaultSize;
+    
+    return { canvas, ctx };
 }

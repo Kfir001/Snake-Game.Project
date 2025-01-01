@@ -58,6 +58,9 @@ body {
   border: 1px solid rgba(255, 255, 255, 0.1);
   transform: rotateX(10deg);
   transition: all 0.3s ease;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
 }
 
 .game-container:hover {
@@ -78,16 +81,21 @@ body {
 }
 
 .game-board {
-  background: rgba(0, 0, 0, 0.3);
+  width: 70vw;
+  height: 70vw;
+  max-width: 800px;
+  max-height: 800px;
+  margin: 0 auto;
   border-radius: 15px;
   overflow: hidden;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+  background: #000; /* רקע שחור למכל */
 }
 
 #gameCanvas {
+  width: 100%;
+  height: 100%;
+  background: #000; /* רקע שחור לקנבס */
   display: block;
-  background: linear-gradient(135deg, #0a192f 0%, #112240 100%);
-  border: 3px solid rgba(255, 255, 255, 0.1);
 }
 
 .controls {
@@ -216,8 +224,10 @@ body {
   }
 
   .game-board {
-    width: 100%;
-    height: auto;
+    width: 95vw;
+    height: 95vw;
+    max-width: 95vw;
+    max-height: 95vw;
   }
 
   .arrow-btn {
@@ -234,5 +244,19 @@ body {
     width: 50px;
     height: 50px;
     font-size: 20px;
+  }
+}
+
+@media (max-width: 800px) {
+  .game-board {
+    width: 90vw;
+    height: 90vw;
+  }
+}
+
+@media (min-width: 1024px) {
+  .game-board {
+    width: 800px;
+    height: 800px;
   }
 }
