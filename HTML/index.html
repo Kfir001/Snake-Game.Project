@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en" data-bs-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>80s Retro Snake</title>
+    <link href="https://cdn.replit.com/agent/bootstrap-agent-dark-theme.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+    <link href="../CSS/style.css" rel="stylesheet">
+</head>
+<body>
+    <div class="container py-4">
+        <div class="row justify-content-center">
+            <div class="col-12 col-md-8 text-center">
+                <!-- Title with neon effect -->
+                <h1 class="game-title mb-4">NEON SNAKE</h1>
+                
+                <!-- Score container (hidden initially) -->
+                <div id="scoreContainer" class="score-container mb-4 d-none">
+                    <h3 class="mb-0">SCORE: <span id="score">0</span></h3>
+                </div>
+
+                <!-- Game canvas container -->
+                <div class="canvas-container mb-4">
+                    <div id="vhsEffect" class="vhs-effect"></div>
+                    <div id="starField" class="star-field"></div>
+                    <canvas id="gameCanvas"></canvas>
+                    
+                    <!-- Start Screen Menu (overlay on canvas) -->
+                    <div id="startScreen" class="start-screen">
+                        <div class="menu-container">
+                            <div class="menu-item active" data-action="start">START GAME</div>
+                            <div class="menu-item" data-action="modes">GAME MODES</div>
+                            <div class="menu-item" data-action="scores">HIGH SCORES</div>
+                            <div class="menu-item" data-action="settings">SETTINGS</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Game controls (hidden initially) -->
+                <div id="gameControls" class="controls d-none">
+                    <button id="startButton" class="btn btn-lg px-4 py-2">
+                        START GAME
+                    </button>
+                    <p class="mt-3 text-secondary d-none d-md-block">
+                        USE ARROW KEYS TO CONTROL
+                    </p>
+                    <p class="mt-3 text-secondary d-md-none">
+                        SWIPE TO CONTROL
+                    </p>
+                </div>
+
+                <div id="gameOver" class="alert mt-4 d-none">
+                    GAME OVER! PRESS START TO PLAY AGAIN
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="../JS/game.js"></script>
+</body>
+</html>
